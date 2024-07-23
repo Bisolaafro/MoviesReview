@@ -11,15 +11,24 @@ returnMovies(APILINK);
 
 function returnMovies(url) {
   fetch(url).then(res => res.json()).then(function(data) {
-    console.log(data.results);
+    let rows_list = new Map();
+    for (let i = 0; i < data.results.length; i += 4) {
+      let row = document.createElement("div");
+      row.setAttribute("class", "row");
+      rows_list.set("div_card_" + (Math.floor(i/4)), row);
+    }
+    
+    let movies = -1;
+    
     data.results.forEach(
+      
       element => {
+        movies ++;
+         
         const div_card = document.createElement('div');
         div_card.setAttribute('class', 'card');
 
-
-        const div_row = document.createElement('div');
-        div_row.setAttribute('class', 'row');
+        let div_row = rows_list.get("div_card_" + Math.floor(movies / 4));
 
         const div_column = document.createElement('div');
         div_column.setAttribute('class', 'column');
@@ -40,6 +49,11 @@ function returnMovies(url) {
         div_card.appendChild(title);
         div_column.appendChild(div_card);
         div_row.appendChild(div_column);
+
+        if (movies % 4 == 0){
+          main.appendChild(div_row);
+        }
+        
 
         main.appendChild(div_row);
       });
